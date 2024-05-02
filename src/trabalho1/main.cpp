@@ -12,7 +12,7 @@
  * @author Pedro Paulo Pereira Souza
  * 
  * @compile:
- * g++ main.cpp -I"../../include/freeglut/include" -L"../../include/freeglut/lib" -lfreeglut -lopengl32  -lglu32 -o ./out/main.exe
+ * g++ main.cpp -I"../../include/freeglut/include" -L"../../include/freeglut/lib" -lfreeglut -lopengl32 -lglu32 -o ./out/main.exe
  * @execute:
  * ./out/main.exe
  */
@@ -133,6 +133,7 @@ void initialize(void) {
 }
 
 void reshape_window(GLint new_width, GLint new_height) {
+    // Redimensiona a janela
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(xwc_min, xwc_max, ywc_min, ywc_max);
