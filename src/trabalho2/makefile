@@ -5,7 +5,7 @@ INCLUDE_DIR = ..\..\include
 OUT_DIR = out
 
 build: 
-	mkdir out
+	if not exist "$(OUT_DIR)" mkdir $(OUT_DIR)
 	g++ -Wall \
 	./*.cpp \
 	-I"$(ROOT_DIR)/include/freeglut/include" \
