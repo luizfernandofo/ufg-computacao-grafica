@@ -3,11 +3,12 @@
 ROOT_DIR = ..\..
 INCLUDE_DIR = ..\..\include
 OUT_DIR = out
+MAIN_FILE = main
 
 build: 
 	if not exist "$(OUT_DIR)" mkdir $(OUT_DIR)
 	g++ -Wall \
-	./*.cpp \
+	./$(MAIN_FILE).cpp \
 	-I"$(ROOT_DIR)/include/freeglut/include" \
 	-L"$(ROOT_DIR)/include/freeglut/lib" \
 	-lfreeglut \
