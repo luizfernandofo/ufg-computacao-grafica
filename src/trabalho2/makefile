@@ -3,7 +3,7 @@
 ROOT_DIR = ..\..
 INCLUDE_DIR = ..\..\include
 OUT_DIR = out
-MAIN_FILE = main
+MAIN_FILE = bresenham
 
 build: 
 	if not exist "$(OUT_DIR)" mkdir $(OUT_DIR)
