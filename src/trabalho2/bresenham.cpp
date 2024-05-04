@@ -5,38 +5,69 @@
 #define WIDTH 500
 #define HEIGHT 500
 
-/**
- * @brief Traçado de reta otimizado
- *
- * @param x0 coordenada x do ponto inicial
- * @param y0 coordenada y do ponto inicial
- * @param xEnd coordenada x do ponto final
- * @param yEnd coordenada y do ponto final
- */
-void draw_line(GLint x0, GLint y0, GLint xEnd, GLint yEnd) {
-    GLint dx = abs(xEnd - x0);
-    GLint dy = abs(yEnd - y0);
-    GLint x = x0, y = y0; 
-    GLint sx = (x0 < yEnd) ? 1 : -1;
-    GLint sy = (y0 < yEnd) ? 1 : -1;
-    GLint err = dx - dy;
+void draw_line_high(int x1, int y1, int x2, int y2) {
+    int dx = x2 - x1;
+    int dy = y2 - y1;
+    int step_x = 1;
+
+    if (dx < 0) {
+        step_x = -1;
+        dx = -dx;
+    }
+
+    int d = (2 * dx) - dy;
+    int x = x1;
 
     glBegin(GL_POINTS);
-    while (true) {
+    for (int y = y1; y <= y2; y++) {
         glVertex2i(x, y);
-        if (x == xEnd && y == yEnd)
-            break;
-        int e2 = 2 * err;
-        if (e2 > -dy) {
-            err -= dy;
-            x += sx;
-        }
-        if (e2 < dx) {
-            err += dx;
-            y += sy;
-        }
+        if (d > 0) {
+            d += 2 * (dx - dy);
+            x += step_x;
+        } else
+            d += 2 * dx;
     }
     glEnd();
+}
+
+void draw_line_low(int x1, int y1, int x2, int y2) {
+    int dx = x2 - x1;
+    int dy = y2 - y1;
+    int step_y = 1;
+
+    if (dy < 0) {
+        step_y = -1;
+        dy = -dy;
+    }
+
+    int d = (2 * dy) - dx;
+    int y = y1;
+
+    glBegin(GL_POINTS);
+    for (int x = x1; x <= x2; x++) {
+        glVertex2i(x, y);
+        if (d > 0) {
+            d += 2 * (dy - dx);
+            y += step_y;
+        } else
+            d += 2 * dy;
+    }
+    glEnd();
+}
+
+void draw_line(int x1, int y1, int x2, int y2) {
+    if (abs(y2 - y1) < abs(x2 - x1)) {
+        if (x1 > x2) 
+            draw_line_low(x2, y2, x1, y1);
+        else 
+            draw_line_low(x1, y1, x2, y2);
+    }
+    else {
+        if (y1 > y2)
+            draw_line_high(x2, y2, x1, y1);
+        else
+            draw_line_high(x1, y1, x2, y2);
+    }
 }
 
 /**
@@ -75,17 +106,16 @@ void display(void) {
     draw_line(0, 0, 100, 200);
 
     glColor3f(1.0, 0.0, 0.0);
-    draw_line(-100, 200, 0, 0);
-    draw_line(-200, 100, 0, 0);
+    draw_line(0, 0, -100, 200);
+    draw_line(0, 0, -200, 100);
 
     glColor3f(0.0, 1.0, 0.0);
     draw_line(0, 0, -200, -100);
     draw_line(0, 0, -100, -200);
 
     glColor3f(1.0, 0.0, 1.0);
-    draw_line(100, -200, 0, 0);
-    draw_line(200, -100, 0, 0);
-
+    draw_line(0, 0, 200, -100);
+    draw_line(0, 0, 100, -200);
 
     glFlush();
 }
