@@ -31,9 +31,19 @@ void draw_axes() {
 }
 
 
-void draw_convex_hull() {
-
+void draw_convex_hull(vector<Point> points) {
+    int i, num_points = points.size();
+    glColor3f(1.0, 0.0, 0.0);
+    glBegin(GL_LINES);
+    for (i = 0; i < num_points - 1; i++) {
+        glVertex2d(points[i].x, points[i].y);
+        glVertex2d(points[i + 1].x, points[i + 1].y);
+    }
+    glVertex2d(points[i].x, points[i].y);
+    glVertex2d(points[0].x, points[0].y);
+    glEnd();
 }
+
 
 void display(void) {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -49,8 +59,8 @@ void display(void) {
     points[1].x = 60;
     points[1].y = 40;
 
-    points[2].x = 50;
-    points[2].y = 80;
+    points[2].x = 150;
+    points[2].y = 180;
 
     points[3].x = 100;
     points[3].y = 10;
@@ -75,6 +85,8 @@ void display(void) {
             glVertex2i(p.x, p.y);
         }
     glEnd();
+
+    draw_convex_hull(result_points);
     
     glFlush();
 }
