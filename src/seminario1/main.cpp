@@ -102,7 +102,7 @@ int main(int argc, char **argv) {
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
     glutInitWindowPosition(50, 100);
     glutInitWindowSize(WIDTH, HEIGHT);
-    glutCreateWindow("Retas Otimizadas");
+    glutCreateWindow("Fecho convexo 2D");
     init();
     glutDisplayFunc(display);
     glutMainLoop();
