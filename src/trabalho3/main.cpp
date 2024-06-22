@@ -15,7 +15,6 @@ class Circumference {
     float center_x;
     float center_y;
     float radius;
-    float radius_sqrd;
 
     float red;
     float green;
@@ -24,12 +23,12 @@ class Circumference {
     bool animation_not_started = true;
     std::chrono::time_point<std::chrono::system_clock> animation_start_time;
 
-    // Function to draw a horizontal line
-    void drawHorizontalLine(float x1, float x2, float y)
+    // Function to draw a line
+    void drawLine(float x1, float y1, float x2, float y2)
     {
       glBegin(GL_LINES);
-      glVertex2f(x1, y);
-      glVertex2f(x2, y);
+      glVertex2f(x1, y1);
+      glVertex2f(x2, y2);
       glEnd();
     }
 
@@ -38,7 +37,6 @@ class Circumference {
       this->center_x = c_x;
       this->center_y = c_y;
       this->radius = radius;
-      this->radius_sqrd = radius * radius;
 
       std::srand(std::time(0));
       this->red = static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX);
@@ -62,8 +60,33 @@ class Circumference {
       
       for (float y = -current_radius; y <= current_radius; y += 0.001f)
       {
-        float x = sqrt(this->radius_sqrd - y * y);
-        drawHorizontalLine(this->center_x - x, this->center_x + x, this->center_y + y);
+        float x = sqrt(this->radius * this->radius - y * y);
+        drawLine(this->center_x - x, this->center_y + y, this->center_x + x, this->center_y + y);
+      }
+
+      if (duration_elapsed >= 1.0f) {
+        this->animation_not_started = true;
+      }
+    }
+
+    void draw_radial() {
+      if (this->animation_not_started) {
+        this->animation_not_started = !this->animation_not_started;
+        this->animation_start_time = std::chrono::high_resolution_clock::now();
+      }
+
+      glColor3f(this->red, this->green, this->blue);
+      auto duration_elapsed = static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(
+          std::chrono::high_resolution_clock::now() - this->animation_start_time).count()) / ANIMATION_DURATION;
+
+      if (duration_elapsed > 1.0f) duration_elapsed = 1.0f;
+
+      float max_angle = 2.0f * M_PI * duration_elapsed;
+
+      for (float angle = 0.0f; angle <= max_angle; angle += 0.01f) {
+        float x = this->center_x + this->radius * cos(angle);
+        float y = this->center_y + this->radius * sin(angle);
+        drawLine(this->center_x, this->center_y, x, y);
       }
 
       if (duration_elapsed >= 1.0f) {
@@ -82,7 +105,7 @@ void display()
   glLoadIdentity();
 
   c1.draw_with_scan_line();
-  c2.draw_with_scan_line();
+  c2.draw_radial();
 
   glutSwapBuffers();
 }
