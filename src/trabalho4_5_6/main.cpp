@@ -3,6 +3,7 @@
 GLfloat angle, fAspect;
 int projectionType = 1; // 0 para ortogonal, 1 para perspectiva
 bool wireframe_mode = false;
+bool backface_ativado = true;
 
 // Variáveis para rotação com o mouse
 bool mouseDown = false;
@@ -27,20 +28,29 @@ void Desenha(void)
   glBegin(GL_QUADS);
 
   // Face posterior - Azul
-  glColor3f(0.0, 0.0, 1.0);
-  glNormal3f(0.0, 0.0, 1.0); // Normal da face
-  glVertex3f(40.0, 40.0, 40.0);
-  glVertex3f(-40.0, 40.0, 40.0);
-  glVertex3f(-40.0, -40.0, 40.0);
-  glVertex3f(40.0, -40.0, 40.0);
+  // glColor3f(0.0, 0.0, 1.0);
+  // glNormal3f(0.0, 0.0, 1.0); // Normal da face
+  // glVertex3f(40.0, 40.0, 40.0);
+  // glVertex3f(-40.0, 40.0, 40.0);
+  // glVertex3f(-40.0, -40.0, 40.0);
+  // glVertex3f(40.0, -40.0, 40.0);
 
-  // Face frontal - Verde
+  // // Face frontal - Verde
+  if (backface_ativado) {
+    glColor3f(0.0, 1.0, 0.0);
+    glNormal3f(0.0, 0.0, -1.0); // Normal da face
+    glVertex3f(40.0, 40.0, -40.0);
+    glVertex3f(40.0, 0.0, -40.0);
+    glVertex3f(-40.0, 0.0, -40.0);
+    glVertex3f(-40.0, 40.0, -40.0);
+  }
+  
   glColor3f(0.0, 1.0, 0.0);
-  glNormal3f(0.0, 0.0, -1.0); // Normal da face
-  glVertex3f(40.0, 40.0, -40.0);
+  glNormal3f(0.0, 0.0, 1.0); // Normal da face
+  glVertex3f(40.0, 0.0, -40.0);
   glVertex3f(40.0, -40.0, -40.0);
   glVertex3f(-40.0, -40.0, -40.0);
-  glVertex3f(-40.0, 40.0, -40.0);
+  glVertex3f(-40.0, 0.0, -40.0);
 
   // Face lateral esquerda - Vermelho
   glColor3f(1.0, 0.0, 0.0);
@@ -204,6 +214,10 @@ void GerenciaTeclado(unsigned char key, int x, int y)
   case 'w':
   case 'W':
     wireframe_mode = !wireframe_mode;
+    break;
+
+  case 'b':
+    backface_ativado = !backface_ativado;
     break;
   }
   EspecificaParametrosVisualizacao();
